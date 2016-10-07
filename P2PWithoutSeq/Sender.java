@@ -34,7 +34,7 @@ public class Sender implements Runnable {
 		newStatus = status.getStatus(myIndex);
 		Charset iso88591charset = Charset.forName("ISO-8859-1");
 		newStatus = addSlashes(newStatus);
-		String output = myUnikey + ":" + newStatus + ":" + logicalClock;
+		String output = myUnikey + ":" + newStatus;
 		byte[] toSend = null;
 		toSend = output.getBytes(iso88591charset);
 		for (int i = 0; i < status.getNumberOfParticipants(); i++) {

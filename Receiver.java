@@ -1,22 +1,13 @@
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
 public class Receiver implements Runnable {
-	private static final int NOT_YET_INITIALISED = 0;
-	private static final int NOT_ACTIVE_BETWEEN_10_20 = 1;
 	private static final int ACTIVE_WITHIN_10 = 2;
-	private static final int NOT_ACTIVE_MORE_THAN_20 = 3;
 	private Status status;
-	private String myUnikey;
-	private int myIndex;
 	private DatagramSocket socket;
-	private InetAddress ipaddress;
-	private int port;
 
 	public static boolean isNumber(String str) {
 		try {
@@ -29,15 +20,8 @@ public class Receiver implements Runnable {
 	}
 
 	public Receiver(Status s, String unikey, DatagramSocket socket) {
-		this.myUnikey = unikey;
 		this.status = s;
-		this.myIndex = this.status.unikeys.indexOf(myUnikey);
 		this.socket = socket;
-		try {
-			this.ipaddress = InetAddress.getByName(status.getIpAddress(myIndex));
-		} catch (UnknownHostException e) {
-		}
-		this.port = status.getPort(myIndex);
 	}
 
 	public static String removeSlashes(String str) {
@@ -74,7 +58,7 @@ public class Receiver implements Runnable {
 		String input = null;
 		input = new String(input1, iso88591charset);
 		String strToProcess = new String(input);
-		strToProcess = strToProcess.replaceAll("\\\\:", "");
+		strToProcess = strToProcess.replaceAll("\\\\:", "" + (char)256);
 		String[] components = strToProcess.split(":");
 		String state = null;
 		String seq = null;
