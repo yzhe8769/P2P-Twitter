@@ -58,10 +58,10 @@ Status is empty. Retry.
 ```
 Type a message that is longer than 140 characters. You should get:
 ```
-Status: 012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789
+Status: 0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
 Status is too long, 140 characters max. Retry.
 ```
-### 4) Test normal status (to be confirmed)
+### 4) Test normal status
 In terminal 1, type:
 ```
 Status: Not too bad today.
@@ -83,7 +83,7 @@ Terminal 2 outputs:
 Status: It's ok.
 ### P2P tweets ###
 # test1 (myself) : It's ok.
-# [test2 (lshi7319) : not yet initialized]
+# test2 (lshi7319) : Not too bad today.
 ### End tweets ###
 ```
 ### 5) Test status with colons
@@ -93,7 +93,7 @@ Status: ::This::is::a::status::with::a::lot::of::colons::
 ```
 Terminal 1 outputs:
 ```
-Status: Not too bad today.
+Status: ::This::is::a::status::with::a::lot::of::colons::
 ### P2P tweets ###
 # test1 (yzhe8769) : It's ok.
 # test2 (myself) : ::This::is::a::status::with::a::lot::of::colons::
@@ -105,7 +105,7 @@ Status: fine.
 ```
 Terminal 2 outputs:
 ```
-Status: It's ok.
+Status: fine.
 ### P2P tweets ###
 # test1 (myself) :fine.
 # test2 (lshi7319) : ::This::is::a::status::with::a::lot::of::colons::
@@ -170,7 +170,7 @@ Terminal 1 outputs:
 ```
 Status: I'm back.
 ### P2P tweets ###
-# [test1 (yzhe8769) : not yet initialized]
+# test1 (yzhe8769) : nvm
 # test2 (myself) : I'm back.
 ### End tweets ###
 ```
