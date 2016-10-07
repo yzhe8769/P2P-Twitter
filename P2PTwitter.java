@@ -9,7 +9,9 @@ public class P2PTwitter implements Runnable {
 	public static final int ACTIVE_WITHIN_10 = 2;
 	public static final int NOT_ACTIVE_MORE_THAN_20 = 3;
 	private String unikey;
-
+	public P2PTwitter(){
+		
+	}
 	public P2PTwitter(String unikey) {
 		this.unikey = unikey;
 	}

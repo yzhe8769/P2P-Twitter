@@ -73,8 +73,13 @@ public class Receiver implements Runnable {
 		}else if(components.length == 3){
 			seq = components[2];
 			if(isNumber(seq)){
-				status.changeSequenceNumber(index, Integer.parseInt(seq));
-				state = input.substring(input.indexOf(':') + 1, input.lastIndexOf(':'));
+				int sequenceNumber = Integer.parseInt(seq);
+				if(status.getSequenceNumber(index) > sequenceNumber){
+					return;
+				}else{
+					status.changeSequenceNumber(index, sequenceNumber);
+					state = input.substring(input.indexOf(':') + 1, input.lastIndexOf(':'));
+				}	
 			}else{
 				state = input.substring(input.indexOf(':') + 1);
 			}
