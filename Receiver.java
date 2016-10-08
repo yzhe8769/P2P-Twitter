@@ -6,6 +6,7 @@ import java.util.Arrays;
 
 public class Receiver implements Runnable {
 	private static final int ACTIVE_WITHIN_10 = 2;
+	private static final int NOT_YET_INITIALISED = 0;
 	private Status status;
 	private DatagramSocket socket;
 
@@ -22,20 +23,6 @@ public class Receiver implements Runnable {
 	public Receiver(Status s, String unikey, DatagramSocket socket) {
 		this.status = s;
 		this.socket = socket;
-	}
-
-	public static String removeSlashes(String str) {
-		String output = "";
-		for (int i = 0; i < str.length();) {
-			if (str.charAt(i) == '\\' && i != str.length() - 1 && str.charAt(i + 1) == ':') {
-				output += str.charAt(i + 1);
-				i += 2;
-			} else {
-				output += str.charAt(i);
-				i++;
-			}
-		}
-		return output;
 	}
 
 	// listen on the socket, verify the unikey, if not do nothing, if yes,
@@ -75,10 +62,11 @@ public class Receiver implements Runnable {
 			seq = components[2];
 			if(isNumber(seq)){
 				int sequenceNumber = Integer.parseInt(seq);
+				int oldSeq = status.getSequenceNumber(index);
 				if(sequenceNumber == 0){
 					status.changeSequenceNumber(index, sequenceNumber);
 					state = input.substring(input.indexOf(':') + 1, input.lastIndexOf(':'));
-				}else if(status.getSequenceNumber(index) > sequenceNumber){
+				}else if(oldSeq > sequenceNumber){
 					//ignore message
 					return;
 				}else{
@@ -94,15 +82,22 @@ public class Receiver implements Runnable {
 			return;
 			//illegal message, has more then two : not escaped
 		}	
-		state = removeSlashes(state);
+		state = state.replaceAll("\\\\:", ":");
 		status.changeStatus(index, state);
-		status.changeActiveStatus(index, ACTIVE_WITHIN_10);
+		if(status.getActiveStatus(index) == NOT_YET_INITIALISED){
+			status.changeActiveStatus(index, ACTIVE_WITHIN_10);
+		}
 		status.changeLastTimeActive(index, (long) (System.currentTimeMillis() / 1000));
 	}
 
 	@Override
 	public void run() {
 		while(true){
+			try{
+				Thread.sleep(1);
+			}catch(Exception e){
+				
+			}
 			listen();
 		}
 

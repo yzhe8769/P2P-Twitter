@@ -68,7 +68,7 @@ public class P2PTwitter implements Runnable {
 			s.lineOfStatus.add("");
 			s.activeStatus.add(NOT_YET_INITIALISED);
 			s.lastTimeActive.add((long) 0);
-			s.sequenceNumbers.add(-1);
+			s.sequenceNumbers.add(0);
 		}
 		fileInput.close();
 		DatagramSocket socket = null;

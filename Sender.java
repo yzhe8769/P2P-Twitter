@@ -17,23 +17,11 @@ public class Sender implements Runnable {
 		logicalClock = 0;
 	}
 
-	public static String addSlashes(String str) {
-		String result = "";
-		for (int i = 0; i < str.length(); i++) {
-			if (str.charAt(i) != ':') {
-				result += str.charAt(i);
-			} else {
-				result += "\\" + str.charAt(i);
-			}
-		}
-		return result;
-	}
-
 	public void broadcast() {
 		String newStatus;
 		newStatus = status.getStatus(myIndex);
 		Charset iso88591charset = Charset.forName("ISO-8859-1");
-		newStatus = addSlashes(newStatus);
+		newStatus = newStatus.replaceAll(":", "\\\\:");
 		String output = myUnikey + ":" + newStatus + ":" + logicalClock;
 		byte[] toSend = null;
 		toSend = output.getBytes(iso88591charset);
