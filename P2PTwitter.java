@@ -113,7 +113,7 @@ public class P2PTwitter implements Runnable {
 						s.changeActiveStatus(i, NOT_ACTIVE_BETWEEN_10_20);
 					} else {
 						s.changeActiveStatus(i, NOT_ACTIVE_MORE_THAN_20);
-						s.changeSequenceNumber(i, -1);
+						//s.changeSequenceNumber(i, -1);
 					}
 				}
 			}

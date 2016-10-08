@@ -70,18 +70,25 @@ public class Receiver implements Runnable {
 		if(components.length == 2){
 			//no sequence number for sure
 			 state = input.substring(input.indexOf(':') + 1);
+			 status.changeSequenceNumber(index, 0);
 		}else if(components.length == 3){
 			seq = components[2];
 			if(isNumber(seq)){
 				int sequenceNumber = Integer.parseInt(seq);
-				if(status.getSequenceNumber(index) > sequenceNumber){
+				if(sequenceNumber == 0){
+					status.changeSequenceNumber(index, sequenceNumber);
+					state = input.substring(input.indexOf(':') + 1, input.lastIndexOf(':'));
+				}else if(status.getSequenceNumber(index) > sequenceNumber){
+					//ignore message
 					return;
 				}else{
 					status.changeSequenceNumber(index, sequenceNumber);
 					state = input.substring(input.indexOf(':') + 1, input.lastIndexOf(':'));
 				}	
 			}else{
+				//sequence number invalid
 				state = input.substring(input.indexOf(':') + 1);
+				status.changeSequenceNumber(index, 0);
 			}
 		}else{
 			return;
