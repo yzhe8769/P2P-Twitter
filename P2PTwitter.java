@@ -4,28 +4,21 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 
 public class P2PTwitter implements Runnable {
-	public static final int NOT_YET_INITIALISED = 0;
+	//public static final int NOT_YET_INITIALISED = 0;
 	public static final int NOT_ACTIVE_BETWEEN_10_20 = 1;
 	public static final int ACTIVE_WITHIN_10 = 2;
 	public static final int NOT_ACTIVE_MORE_THAN_20 = 3;
 	private String unikey;
+	private Status s;
 	public P2PTwitter(){
 		
 	}
-	public P2PTwitter(String unikey) {
+	public P2PTwitter(String unikey, Status s) {
 		this.unikey = unikey;
+		this.s = s;
 	}
 
 	public static void main(String[] args) {
-		Thread p2p = new Thread(new P2PTwitter(args[0]));
-		p2p.start();
-
-	}
-
-	@Override
-	public void run() {
-		// Scanner for standard input
-		Scanner in = new Scanner(System.in);
 		Status s = new Status();
 		Scanner fileInput = null;
 		try {
@@ -54,7 +47,7 @@ public class P2PTwitter implements Runnable {
 						s.pseudoes.add(information.substring(7));
 					} else if (information.startsWith("unikey")) {
 						s.unikeys.add(information.substring(7));
-						if (information.substring(7).equals(unikey)) {
+						if (information.substring(7).equals(args[0])) {
 							s.setIndex(i);
 						}
 					} else if (information.startsWith("port")) {
@@ -66,11 +59,22 @@ public class P2PTwitter implements Runnable {
 				}
 			}
 			s.lineOfStatus.add("");
-			s.activeStatus.add(NOT_YET_INITIALISED);
-			s.lastTimeActive.add((long) 0);
+			s.activeStatus.add(ACTIVE_WITHIN_10);
+			s.initialized.add(false);
+			s.lastTimeActive.add(System.currentTimeMillis() / 1000);
 			s.sequenceNumbers.add(0);
 		}
 		fileInput.close();
+		Thread p2p = new Thread(new P2PTwitter(args[0], s));
+		p2p.start();
+
+	}
+
+	@Override
+	public void run() {
+		// Scanner for standard input
+		Scanner in = new Scanner(System.in);
+		
 		DatagramSocket socket = null;
 		try {
 			socket = new DatagramSocket(s.ports.get(s.unikeys.indexOf(unikey)));
@@ -97,6 +101,7 @@ public class P2PTwitter implements Runnable {
 			}
 			System.out.println("### P2P tweets ###");
 			s.changeStatus(myIndex, myStatus);
+			s.changeInitializeStatus(myIndex, true);
 			s.changeLastTimeActive(myIndex, (long) (System.currentTimeMillis() / 1000));
 			if (!serverStarted) {
 				sender.start();
@@ -104,7 +109,6 @@ public class P2PTwitter implements Runnable {
 			}
 			send.broadcast();
 			for (int i = 0; i < s.getNumberOfParticipants(); i++) {
-				if (s.getActiveStatus(i) != NOT_YET_INITIALISED) {
 					long currentTime = System.currentTimeMillis() / 1000;
 					long lastTimeActive = s.getLastTimeActive(i);
 					if (currentTime - lastTimeActive < 10) {
@@ -113,9 +117,8 @@ public class P2PTwitter implements Runnable {
 						s.changeActiveStatus(i, NOT_ACTIVE_BETWEEN_10_20);
 					} else {
 						s.changeActiveStatus(i, NOT_ACTIVE_MORE_THAN_20);
-						//s.changeSequenceNumber(i, -1);
 					}
-				}
+				
 			}
 			System.out.print(s);
 			System.out.println("### End tweets ###\n");

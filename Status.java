@@ -1,7 +1,7 @@
 import java.util.*;
 
 public class Status {
-	public static final int NOT_YET_INITIALISED = 0;
+	//public static final int NOT_YET_INITIALISED = 0;
 	public static final int NOT_ACTIVE_BETWEEN_10_20 = 1;
 	public static final int ACTIVE_WITHIN_10 = 2;
 	public static final int NOT_ACTIVE_MORE_THAN_20 = 3;
@@ -14,6 +14,7 @@ public class Status {
 	public ArrayList<Integer> activeStatus;
 	public ArrayList<Long> lastTimeActive;
 	public ArrayList<Integer> sequenceNumbers;
+	public ArrayList<Boolean> initialized;
 	public int myIndex;
 
 	public Status() {
@@ -25,6 +26,15 @@ public class Status {
 		activeStatus = new ArrayList<Integer>();
 		lastTimeActive = new ArrayList<Long>();
 		sequenceNumbers = new ArrayList<Integer>();
+		initialized = new ArrayList<Boolean>();
+	}
+
+	public synchronized boolean isInitialized(int index) {
+		return initialized.get(index);
+	}
+
+	public synchronized void changeInitializeStatus(int index, boolean newStatus) {
+		initialized.set(index, newStatus);
 	}
 
 	public synchronized int getNumberOfParticipants() {
@@ -46,9 +56,11 @@ public class Status {
 	public synchronized int getPort(int index) {
 		return ports.get(index);
 	}
-	public synchronized int getSequenceNumber(int index){
+
+	public synchronized int getSequenceNumber(int index) {
 		return sequenceNumbers.get(index);
 	}
+
 	public synchronized String getStatus(int index) {
 		return lineOfStatus.get(index);
 	}
@@ -84,11 +96,13 @@ public class Status {
 				output += "# " + pseudoes.get(i) + " (myself): " + lineOfStatus.get(i);
 			} else {
 				if (activeStatus.get(i) == ACTIVE_WITHIN_10) {
-					output += "# " + pseudoes.get(i) + " (" + unikeys.get(i) + "): " + lineOfStatus.get(i);
+					if(initialized.get(i) == true){
+						output += "# " + pseudoes.get(i) + " (" + unikeys.get(i) + "): " + lineOfStatus.get(i);
+					}else{
+						output += "# [" + pseudoes.get(i) + " (" + unikeys.get(i) + "): not yet initialized]";
+					}	
 				} else if (activeStatus.get(i) == NOT_ACTIVE_BETWEEN_10_20) {
 					output += "# [" + pseudoes.get(i) + " (" + unikeys.get(i) + "): " + "idle]";
-				} else if (activeStatus.get(i) == NOT_YET_INITIALISED) {
-					output += "# [" + pseudoes.get(i) + " (" + unikeys.get(i) + "): not yet initialized]";
 				} else if (activeStatus.get(i) == NOT_ACTIVE_MORE_THAN_20) {
 					continue;
 				}

@@ -6,7 +6,6 @@ import java.util.Arrays;
 
 public class Receiver implements Runnable {
 	private static final int ACTIVE_WITHIN_10 = 2;
-	private static final int NOT_YET_INITIALISED = 0;
 	private Status status;
 	private DatagramSocket socket;
 
@@ -84,9 +83,9 @@ public class Receiver implements Runnable {
 		}	
 		state = state.replaceAll("\\\\:", ":");
 		status.changeStatus(index, state);
-		if(status.getActiveStatus(index) == NOT_YET_INITIALISED){
-			status.changeActiveStatus(index, ACTIVE_WITHIN_10);
-		}
+		status.changeInitializeStatus(index, true);
+		status.changeActiveStatus(index, ACTIVE_WITHIN_10);
+		
 		status.changeLastTimeActive(index, (long) (System.currentTimeMillis() / 1000));
 	}
 
