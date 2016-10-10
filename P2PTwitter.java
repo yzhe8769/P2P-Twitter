@@ -118,7 +118,7 @@ public class P2PTwitter implements Runnable {
 				}
 			}
 			System.out.print(s);
-			System.out.println("### End tweets ###");
+			System.out.println("### End tweets ###\n");
 		}
 	}
 }
