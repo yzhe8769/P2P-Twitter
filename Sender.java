@@ -24,7 +24,7 @@ public class Sender implements Runnable {
 		newStatus = newStatus.replaceAll(":", "\\\\:");
 		String output = myUnikey + ":" + newStatus + ":" + logicalClock;
 		byte[] toSend = null;
-		toSend = output.getBytes(iso88591charset);
+		toSend = output.getBytes();
 		for (int i = 0; i < status.getNumberOfParticipants(); i++) {
 			// send the message using the datagram socket to all other peers
 			if (i != myIndex) {

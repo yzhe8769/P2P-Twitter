@@ -38,11 +38,11 @@ public class Receiver implements Runnable {
 		} catch (IOException e) {
 			return;
 		}
-		
-		int trueLength = d.getLength();
-		byte[] input1 = Arrays.copyOf(buff, trueLength);
-		String input = null;
-		input = new String(input1, iso88591charset);
+		String input = new String(d.getData(), 0, d.getLength());
+		//int trueLength = d.getLength();
+		//byte[] input1 = Arrays.copyOf(buff, trueLength);
+		//String input = null;
+		//input = new String(input1, iso88591charset);
 		String strToProcess = new String(input);
 		strToProcess = strToProcess.replaceAll("\\\\:", "" + (char)256);
 		String[] components = strToProcess.split(":");
