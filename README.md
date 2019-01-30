@@ -1,12 +1,17 @@
-# COMP2121 Assignment 2 P2PTwitter
+# P2PTwitter
+## What does the code do?
+This repo contains Java source code to simulate a P2P network in which users know each other and are able to update and share status in real time. Status is persistent only if the user is live. If a user goes offline, this can be detected by other peers as they are continuously exchanging the status. The status of offline user will be set to idle after 10 seconds on other peers' machine. The status of offline user will be removed after 20 seconds.
+
+The project is a customised P2P Twitter network running on UDP but with built-in mechanisms to ensure ordering and integrity of messages.
+
 ## How to Compile and run the Code?
 ### Inside command line, type
 ```
 javac -cp . *.java
 java P2PTwitter yzhe8769
 ```
-**Notice 'yzhe8769' is an arbitrary unikey given by you.
-**This needs to be the same as one of the unikeys that are listed in the participants.properties file.
+*Notice 'yzhe8769' is an arbitrary unikey given by you.
+*This needs to be the same as one of the unikeys that are listed in the participants.properties file.
 
 ## How to test the code?
 The P2PTwitter consists of a **client thread** and a **server thread**.
